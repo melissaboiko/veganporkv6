@@ -346,7 +346,7 @@ def with_requests_family(family, callback):
 
 
 def porkcall(args, path, data={}, family=None):
-    senddata = copy(data)
+    senddata = {key: str(value) for (key, value) in data.items()}
     argsdict = vars(args)
     for key in ('endpoint', 'apikey', 'secretapikey', 'rootdomain'):
         if key not in senddata:
