@@ -432,7 +432,7 @@ def create_record(domain, dnstype, dnscontent, args):
     data = args_to_json(args)
     # porkbun returns 'name=foo.example.com' in the JSON for 'example.com', but when
     # creating a record you're required  to send just 'name=foo'
-    data['name'] = re.sub(f'\.{args.rootdomain}$', '', 'dyn')
+    data['name'] = re.sub(f'\.{args.rootdomain}$', '', domain)
 
     data['type'] = dnstype
     data['content'] = dnscontent
@@ -448,6 +448,7 @@ def create_record(domain, dnstype, dnscontent, args):
 
     l.info("Created a record for: %s %s %s", domain, dnstype, dnscontent)
     return(response)
+
 
 def delete_record(record, args):
     path = f'/dns/delete/{args.rootdomain}/{record["id"]}'
