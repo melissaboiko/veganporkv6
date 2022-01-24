@@ -345,7 +345,7 @@ def with_requests_family(family, callback):
     return ret
 
 
-def porkcall(args, path, family=None, data={}):
+def porkcall(args, path, data={}, family=None):
     senddata = copy(data)
     argsdict = vars(args)
     for key in ('endpoint', 'apikey', 'secretapikey', 'rootdomain'):
@@ -443,7 +443,7 @@ def create_record(domain, dnstype, dnscontent, args):
         l.info("(Would have created record here via: '%s')", path)
         response = None
     else:
-        response = porkcall(args, path, data)
+        response = porkcall(args, path, data=data)
 
 
     l.info("Created a record for: %s %s %s", domain, dnstype, dnscontent)
