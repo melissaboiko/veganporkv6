@@ -9,7 +9,6 @@ import logging as l
 import logging.handlers
 import json
 import json.decoder
-import urllib.parse
 from copy import copy
 from ipaddress import ip_address, IPv6Address, IPv4Address
 
@@ -67,7 +66,7 @@ def setup_logging():
 
 def setup_arguments():
     parser = argparse.ArgumentParser(
-        description='Porkbun Dynamic DNS updates for IPv6 (and, ugh, IPv4).',
+        description='Porkbun API Dynamic DNS updates for IPv6 (and, ugh, IPv4).',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
  
@@ -163,7 +162,7 @@ All long options described in --help can also be set via the conffile.
                              )
             sys.exit(2)
 
-    l.info(f'Loading {args.conffile}.')
+    l.info('Loading "%s".', args.conffile)
     with open(args.conffile, 'rt') as f:
         try:
             json_config = json.load(f)
@@ -174,18 +173,19 @@ All long options described in --help can also be set via the conffile.
 
     argsdict = vars(args)
     for json_key, json_val in json_config.items():
-        if json_key not in argsdict or argsdict[json_key] == None:
+        if json_key not in argsdict or argsdict[json_key] is None:
             # last minute adjust log levels
             if 'debug' not in argsdict and json_key == 'quiet' and json_val:
                 l.getLogger().setLevel(l.ERROR)
             elif 'quiet' not in argsdict and json_key == 'debug' and json_val:
                 l.getLogger().setLevel(l.DEBUG)
 
-            l.debug(f"Setting `{json_key}' from conffile.")
+            l.debug("Setting '%s' from conffile.", json_key)
             setattr(args, json_key, json_val)
         else:
-            l.debug(f"Ignoring conffile option `{json_key}' "
-                    "in favour of command-line.")
+            l.debug("Ignoring conffile option '{json_key}' "
+                    "in favour of command-line.",
+                   json_key)
 
     l.debug("Merged args: %s", safe_print(vars(args)))
 
@@ -462,7 +462,7 @@ def delete_record(record, args):
         l.info("(Would have deleted old record here via: '%s')", path)
         response = None
     else:
-        response = porkcall(args, path, data)
+        response = porkcall(args, path)
     return(response)
 
 
