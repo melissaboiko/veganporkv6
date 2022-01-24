@@ -9,4 +9,15 @@ Dependencies (apt, opkg or pip):
  - netifaces
  - requests
 
+Example manual call:
+
+    $ ./veganporkv6.py --v6 dyn.example.com -i pppoe-wan --dry-run
+    $ ./veganporkv6.py --v6 dyn.example.com -i pppoe-wan
+
+Example cron (after you configured your .json and tested):
+
+```
+*/5 * * * * /path/to/veganporkv6.py --v4 dyn.example.com --v6 dyn.example.com -i pppoe-wan --quiet
+```
+
 --Melissa
